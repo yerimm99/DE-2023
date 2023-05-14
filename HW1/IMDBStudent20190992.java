@@ -24,6 +24,7 @@ public class IMDBStudent20190992
         private IntWritable cnt = new IntWritable();
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
             StringTokenizer itr = new StringTokenizer(value.toString(), "::");
+            String num = itr.nextToken();
             String title = itr.nextToken();
             String list = itr.nextToken();
 
