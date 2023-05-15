@@ -66,7 +66,6 @@ public class UBERStudent20190992
     }
 
     public static class UBERReducer extends Reducer<Text,Text,Text,Text>{
-        private Text result = new Text();
         public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
             int vSum = 0;
