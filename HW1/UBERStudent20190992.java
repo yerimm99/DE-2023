@@ -30,7 +30,24 @@ public class UBERStudent20190992
             int day = Integer.parseInt(date.split("/")[1]);
             LocalDate d = LocalDate.of(year, month, day);
             DayOfWeek dayOfWeek = d.getDayOfWeek();
-            String dayEng = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US);
+            String dayEng;
+            
+            if(dayOfWeek.getValue() == 1) {
+                dayEng = "MON";
+            }else if (dayOfWeek.getValue() == 2) {
+                dayEng = "TUE";
+            }else if (dayOfWeek.getValue() == 3) {
+                dayEng = "WED";
+            }else if (dayOfWeek.getValue() == 4) {
+                dayEng = "THU";
+            }else if (dayOfWeek.getValue() == 5) {
+                dayEng = "FRI";
+            }else if (dayOfWeek.getValue() == 6) {
+                dayEng = "SAT";
+            }else if (dayOfWeek.getValue() == 7) {
+                dayEng = "SUN";
+            }
+           
             String numDay = number + "," + dayEng;
             info.set(numDay);
 
