@@ -1,5 +1,4 @@
 import java.io.*;
-import java.lang.module.Configuration;
 import java.util.*;
 
 import org.apache.hadoop.conf.*;
@@ -11,9 +10,6 @@ import org.apache.hadoop.mapreduce.lib.input.*;
 import org.apache.hadoop.mapreduce.lib.output.*;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.fs.FSDataInputStream;
-import org.w3c.dom.Text;
-
-import javax.naming.Context;
 
 public class IMDBStudent20190992
 {
@@ -23,10 +19,10 @@ public class IMDBStudent20190992
         private Text genre = new Text();
         private IntWritable cnt = new IntWritable();
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            StringTokenizer itr = new StringTokenizer(value.toString(), "::");
-            String num = itr.nextToken();
-            String title = itr.nextToken();
-            String list = itr.nextToken();
+            
+            String num = value.toString().split("::")[0];
+            String title = value.toString().split("::")[1];
+            String list = value.toString().split("::")[2];
 
             StringTokenizer itr2 = new StringTokenizer(list, "|");
             while(itr2.hasMoreTokens()){
@@ -72,11 +68,11 @@ public class IMDBStudent20190992
         job.setOutputValueClass(IntWritable.class);
 
         job.setInputFormatClass(TextInputFormat.class);
-        job.setOutputFormatClass(TextOutputFormat.class)
+        job.setOutputFormatClass(TextOutputFormat.class);
 
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
-        FileSystem.get(job.getConfiguration()).delete( args[1], true);
+        FileSystem.get(job.getConfiguration()).delete(new Path(args[1]), true);
         job.waitForCompletion(true);
 
 
