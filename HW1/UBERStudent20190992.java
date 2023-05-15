@@ -64,7 +64,7 @@ public class UBERStudent20190992
                 vSum += veh;
                 tSum += tr;
             }
-            String total = vSum + "," + tSum;
+            String total = tSum + "," + vSum;
             result.set(total);
             context.write(key, result);
         }
