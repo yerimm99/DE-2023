@@ -1,8 +1,7 @@
 import java.io.*;
-import java.lang.module.Configuration;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.*;
+import java.time.*;
+import java.time.format.TextStyle;
 
 import org.apache.hadoop.conf.*;
 import org.apache.hadoop.fs.FileSystem;
@@ -13,9 +12,6 @@ import org.apache.hadoop.mapreduce.lib.input.*;
 import org.apache.hadoop.mapreduce.lib.output.*;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.fs.FSDataInputStream;
-import org.w3c.dom.Text;
-
-import javax.naming.Context;
 
 public class UBERStudent20190992
 {
@@ -55,10 +51,12 @@ public class UBERStudent20190992
 
     public static class UBERReducer extends Reducer<Text,Text,Text,Text>{
         private Text result = new Text();
-        public void reduce(Text key, Text values, Context context) throws IOException, InterruptedException {
+        public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
             int vSum = 0;
             int tSum = 0;
+            Text result = new Text();
+            
             for (Text val : values) {
                 String vt = val.toString();
                 int veh = Integer.parseInt(vt.split(",")[0]);
@@ -89,11 +87,11 @@ public class UBERStudent20190992
         job.setOutputValueClass(Text.class);
 
         job.setInputFormatClass(TextInputFormat.class);
-        job.setOutputFormatClass(TextOutputFormat.class)
+        job.setOutputFormatClass(TextOutputFormat.class);
 
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
-        FileSystem.get(job.getConfiguration()).delete( args[1], true);
+        FileSystem.get(job.getConfiguration()).delete( new Path(args[1]), true);
         job.waitForCompletion(true);
 
 
