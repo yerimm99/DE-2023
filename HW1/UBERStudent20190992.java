@@ -16,7 +16,6 @@ public class UBERStudent20190992
 {
     public static class UBERMapper extends Mapper<Object, Text, Text, Text>
     {
-        private String filename;
         private Text info = new Text();
         private Text vt = new Text();
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
@@ -58,10 +57,6 @@ public class UBERStudent20190992
             context.write(info, vt);
 
 
-        }
-        protected void setup(Context context) throws IOException, InterruptedException
-        {
-            filename = ((FileSplit)context.getInputSplit()).getPath().getName();
         }
     }
 
