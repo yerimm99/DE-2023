@@ -37,7 +37,7 @@ public class UBERStudent20190992
             }else if (dayOfWeek.getValue() == 3) {
                 dayEng = "WED";
             }else if (dayOfWeek.getValue() == 4) {
-                dayEng = "THU";
+                dayEng = "THR";
             }else if (dayOfWeek.getValue() == 5) {
                 dayEng = "FRI";
             }else if (dayOfWeek.getValue() == 6) {
