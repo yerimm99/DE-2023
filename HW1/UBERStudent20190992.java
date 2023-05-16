@@ -29,7 +29,7 @@ public class UBERStudent20190992
             int day = Integer.parseInt(date.split("/")[1]);
             LocalDate d = LocalDate.of(year, month, day);
             DayOfWeek dayOfWeek = d.getDayOfWeek();
-            String dayEng;
+            String dayEng="";
             
             if(dayOfWeek.getValue() == 1) {
                 dayEng = "MON";
