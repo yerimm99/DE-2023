@@ -22,8 +22,8 @@ public class UBERStudent20190992
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
             StringTokenizer itr = new StringTokenizer(value.toString(), ",");
 
-            String number = itr.nextToken();
-            String date = itr.nextToken();
+            String number = itr.nextToken().trim();
+            String date = itr.nextToken().trim();
             int year = Integer.parseInt(date.split("/")[2]);
             int month = Integer.parseInt(date.split("/")[0]);
             int day = Integer.parseInt(date.split("/")[1]);
@@ -50,8 +50,8 @@ public class UBERStudent20190992
             String numDay = number + "," + dayEng;
             info.set(numDay);
 
-            String vehicles = itr.nextToken();
-            String trips = itr.nextToken();
+            String vehicles = itr.nextToken().trim();
+            String trips = itr.nextToken().trim();
             String vehtrip = vehicles + "," + trips;
             vt.set(vehtrip);
 
@@ -92,7 +92,7 @@ public class UBERStudent20190992
     public static void main(String[] args) throws Exception
     {
         Configuration conf = new Configuration();
-        Job job = new Job(conf, "UBER");
+        Job job = new Job(conf, "UBERStudent20190992");
 
         job.setJarByClass(UBERStudent20190992.class);
         job.setMapperClass(UBERMapper.class);
