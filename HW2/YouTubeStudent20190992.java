@@ -26,7 +26,7 @@ public class YouTubeStudent20190992
 
     }
 
-    public static class YouTubeMapper extends Mapper<Text, Text, Text, DoubleWritable> {
+    public static class YouTubeMapper1 extends Mapper<Text, Text, Text, DoubleWritable> {
         private Text one_key = new Text();
         private DoubleWritable one_value = new DoubleWritable();
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
@@ -44,7 +44,7 @@ public class YouTubeStudent20190992
             context.set(one_key, one_value);
         }
     }
-    public static class YouTubeReducer extends Reducer<Text, DoubleWritable, Text, DoubleWritable> {
+    public static class YouTubeReducer1 extends Reducer<Text, DoubleWritable, Text, DoubleWritable> {
         private DoubleWritable result = new DoubleWritable();
 
         public void reduce(Text key, Iterable<DoubleWritable> values, Context
