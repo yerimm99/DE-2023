@@ -155,7 +155,7 @@ public class YouTubeStudent20190992
         job2.setJarByClass(YouTubeStudent20190992.class);
         job2.setMapperClass(YouTubeMapper2.class);
         job2.setReducerClass(YouTubeReducer2.class);
-        job2.setNumReduceTasks(2);
+        job2.setNumReduceTasks(1);
         job2.setOutputKeyClass(Text.class);
         job2.setOutputValueClass(NullWritable.class);
         FileInputFormat.addInputPath(job2, new Path(first_phase_result));
