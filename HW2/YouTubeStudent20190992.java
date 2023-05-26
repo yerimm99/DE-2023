@@ -99,7 +99,7 @@ public class YouTubeStudent20190992
         protected void cleanup(Context context) throws IOException, InterruptedException {
             while( queue.size() != 0 ) {
                 Emp emp = (Emp) queue.remove();
-                context.write( new Text( emp.getString() ), DoubleWritable.get() );
+                context.write( new Text( emp.getString() ), NullWritable.get() );
             }
         }
     }
@@ -125,7 +125,7 @@ public class YouTubeStudent20190992
         protected void cleanup(Context context) throws IOException, InterruptedException {
             while( queue.size() != 0 ) {
                 Emp emp = (Emp) queue.remove();
-                context.write( new Text( emp.getString() ), DoubleWritable.get() );
+                context.write( new Text( emp.getString() ), NullWritable.get() );
             }
         }
     }
@@ -133,7 +133,7 @@ public class YouTubeStudent20190992
     public static void main(String[] args) throws Exception{
         Configuration conf = new Configuration();
         String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
-        int topK = 3;
+        
         if (otherArgs.length != 3) {
             System.err.println("Usage: TopK <in> <out>");   System.exit(3);
         }
@@ -141,9 +141,9 @@ public class YouTubeStudent20190992
         String first_phase_result = "/first_phase_result";
 
         Job job1 = new Job(conf, "avgRating");
-        job1.setJarByClass(YoutubeStudent20190992.class);
-        job1.setMapperClass(YoutubeMapper1.class);
-        job1.setReducerClass(YoutubeReducer1.class);
+        job1.setJarByClass(YouTubeStudent20190992.class);
+        job1.setMapperClass(YouTubeMapper1.class);
+        job1.setReducerClass(YouTubeReducer1.class);
         job1.setOutputKeyClass(Text.class);
         job1.setOutputValueClass(DoubleWritable.class);
         FileInputFormat.addInputPath(job1, new Path(otherArgs[0]));
@@ -152,9 +152,9 @@ public class YouTubeStudent20190992
         System.exit(job1.waitForCompletion(true) ? 0 : 1);
 
         Job job2 = new Job(conf, "TopK");
-        job2.setJarByClass(YoutubeStudent20190992.class);
-        job2.setMapperClass(YoutubeMapper2.class);
-        job2.setReducerClass(YoutubeReducer2.class);
+        job2.setJarByClass(YouTubeStudent20190992.class);
+        job2.setMapperClass(YouTubeMapper2.class);
+        job2.setReducerClass(YouTubeReducer2.class);
         job2.setNumReduceTasks(2);
         job2.setOutputKeyClass(Text.class);
         job2.setOutputValueClass(NullWritable.class);
