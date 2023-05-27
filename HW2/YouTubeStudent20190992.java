@@ -10,7 +10,7 @@ import org.apache.hadoop.mapreduce.lib.input.*;
 import org.apache.hadoop.mapreduce.lib.output.*;
 import org.apache.hadoop.util.GenericOptionsParser;
 
-public static class Emp{
+class Emp{
         public String category;
         public double rating;
 
