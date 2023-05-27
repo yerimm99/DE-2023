@@ -164,7 +164,7 @@ public class IMDBStudent20190992
                 String [] data = val.toString().split(",");
                 if(i == 0) {
                     if(!data[0].equals("M")) break;
-                        title = splited[1];
+                        title = data[1];
                  } else {
                      sum += Integer.valueOf(data[1]);
                  }
@@ -173,7 +173,7 @@ public class IMDBStudent20190992
             
             if (sum != 0) {
                 double avg= ((double) sum) / (i - 1);
-                insertInfo(queue, title, avg, topK);
+                insertMovie(queue, title, avg, topK);
               }
 
         }
