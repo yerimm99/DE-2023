@@ -12,16 +12,16 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 public class IMDBStudent20190992 {
 
-    public static class Movie {
-        public String title;
+    public static class IMDB {
+        public String movie;
         public double rating;
 
-        public Movie(String title, double rating) {
-            this.title = title;
+        public IMDB(String movie, double rating) {
+            this.movie = movie;
             this.rating = rating;
         }
 
-        public String getTitle() { return this.title; }
+        public String getMovie() { return this.movie; }
         public Double getRating() { return this.rating; }
     }
 
@@ -91,34 +91,39 @@ public class IMDBStudent20190992 {
         }
     }
 
-    public static class MovieComparator implements Comparator<Movie> {
-        public int compare(Movie x, Movie y) {
-                if (x.rating > y.rating) return 1;
-                if (x.rating < y.rating) return -1;
+    public static class IMDBComparator implements Comparator<IMDB> {
+        @Override
+        public int compare(IMDB o1, IMDB o2) {
+            if (o1.rating > o2.rating) {
+                return 1;
+            } else if (o1.rating == o2.rating) {
                 return 0;
+            } else {
+                return -1;
             }
+        }
     }
 
-    public static void insertMovie(PriorityQueue q, String title, double rating, int topK) {
-        Movie m_head = (Movie) q.peek();
-        if (q.size() < topK || m_head.rating < rating) {
-            Movie m = new Movie(title, rating);
-            q.add(m);
+    public static void insertIMDB(PriorityQueue q, String movie, double rating, int topK) {
+        IMDB imdb_head = (IMDB) q.peek();
+        if (q.size() < topK || imdb_head.rating < rating) {
+            IMDB imdb = new IMDB(movie, rating);
+            q.add(imdb);
             if(q.size() > topK) q.remove();
         }
     }
 
-    public static class MovieMapper extends Mapper<Object, Text, DoubleString, Text> {
+    public static class IMDBMapper extends Mapper<Object, Text, DoubleString, Text> {
         boolean movieFile = true;
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            String[] m = value.toString().split("::");
-            DoubleString one_key = new DoubleString();
-            Text one_value = new Text();
+            String[] movie = value.toString().split("::");
+            DoubleString outputKey = new DoubleString();
+            Text outputValue = new Text();
 
             if (movieFile) {
-                String id = m[0];
-                String title = m[1];
-                String genre = m[2];
+                String id = movie[0];
+                String title = movie[1];
+                String genre = movie[2];
 
                 StringTokenizer itr = new StringTokenizer(genre, "|");
                 boolean isFantasy = false;
@@ -130,18 +135,18 @@ public class IMDBStudent20190992 {
                 }
 
                 if (isFantasy) {
-                    one_key = new DoubleString(id, "M");
-                    one_value.set("M," + title);
-                    context.write( one_key, one_value );
+                    outputKey = new DoubleString(id, "Movies");
+                    outputValue.set("Movies::" + title);
+                    context.write( outputKey, outputValue );
                 }
 
             } else {
-                String id = m[1];
-                String rating = m[2];
+                String id = movie[1];
+                String rating = movie[2];
 
-                one_key = new DoubleString(id, "R");
-                one_value.set("R," + rating);
-                context.write( one_key, one_value );
+                outputKey = new DoubleString(id, "Ratings");
+                outputValue.set("Ratings::" + rating);
+                context.write( outputKey, outputValue );
             }
         }
 
@@ -152,45 +157,47 @@ public class IMDBStudent20190992 {
         }
     }
 
-    public static class MovieReducer extends Reducer<DoubleString, Text, Text, DoubleWritable> {
-        private PriorityQueue<Movie> queue;
-        private Comparator<Movie> comp = new MovieComparator();
+    public static class IMDBReducer extends Reducer<DoubleString, Text, Text, DoubleWritable> {
+        private PriorityQueue<IMDB> queue;
+        private Comparator<IMDB> comp = new IMDBComparator();
         private int topK;
 	    
         public void reduce(DoubleString key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+            double sum = 0;
+            int count = 0;
             String title = "";
-	    double sum = 0;
-            int cnt = 0;
 		
             for (Text val : values) {
                 String[] data = val.toString().split("::");
-                if (cnt == 0) {
-                    if (!data[0].equals("M")) {
+                String file_type = data[0];
+
+                if (count == 0) {
+                    if (!file_type.equals("Movies")) {
                         break;
                     }
                     title = data[1];
                 } else {
                     sum += Double.parseDouble(data[1]);
                 }
-                cnt++;
+                count++;
             }
 
             if (sum != 0) {
-                double avg = sum / (cnt - 1);
-                insertMovie(queue, title, avg, topK);
+                double average = sum / (count - 1);
+                insertIMDB(queue, title, average, topK);
             }
         }
 
         protected void setup(Context context) throws IOException, InterruptedException {
             Configuration conf = context.getConfiguration();
             topK = conf.getInt("topK", -1);
-            queue = new PriorityQueue<Movie>( topK , comp);
+            queue = new PriorityQueue<IMDB>( topK , comp);
         }
 
         protected void cleanup(Context context) throws IOException, InterruptedException {
             while (queue.size() != 0) {
-                Movie m = (Movie) queue.remove();
-                context.write(new Text(m.getMovie()), new DoubleWritable(m.getRating()));
+                IMDB imdb = (IMDB) queue.remove();
+                context.write(new Text(imdb.getMovie()), new DoubleWritable(imdb.getRating()));
             }
         }
     }
@@ -206,8 +213,8 @@ public class IMDBStudent20190992 {
         conf.setInt("topK", Integer.valueOf(otherArgs[2]));
         Job job = new Job(conf, "IMDBStudent20190992");
         job.setJarByClass(IMDBStudent20190992.class);
-        job.setMapperClass(MovieMapper.class);
-        job.setReducerClass(MovieReducer.class);
+        job.setMapperClass(IMDBMapper.class);
+        job.setReducerClass(IMDBReducer.class);
 
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(DoubleWritable.class);
