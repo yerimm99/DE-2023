@@ -92,16 +92,11 @@ public class IMDBStudent20190992 {
     }
 
     public static class MovieComparator implements Comparator<Movie> {
-        @Override
-        public int compare(Movie o1, Movie o2) {
-            if (o1.rating > o2.rating) {
-                return 1;
-            } else if (o1.rating == o2.rating) {
+        public int compare(Movie x, Movie y) {
+                if (x.rating > y.rating) return 1;
+                if (x.rating < y.rating) return -1;
                 return 0;
-            } else {
-                return -1;
             }
-        }
     }
 
     public static void insertMovie(PriorityQueue q, String title, double rating, int topK) {
