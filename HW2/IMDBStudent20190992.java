@@ -1,5 +1,8 @@
-import java.io.IOException;
 import java.util.*;
+import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.apache.hadoop.conf.*;
 import org.apache.hadoop.fs.FileSystem;
@@ -9,12 +12,14 @@ import org.apache.hadoop.mapreduce.*;
 import org.apache.hadoop.mapreduce.lib.input.*;
 import org.apache.hadoop.mapreduce.lib.output.*;
 import org.apache.hadoop.util.GenericOptionsParser;
+import org.apache.hadoop.io.WritableComparable;
+import org.apache.hadoop.io.WritableComparator;
 
-public class Movie{
+class Movie{
         public String title;
         public double rating;
 
-        public Emp(String _title, double _rating) {
+        public Movie(String _title, double _rating) {
             this.title = _title;
             this.rating = _rating;
         }
@@ -30,7 +35,7 @@ public class Movie{
         }
 
     }
-public class DoubleString implements WritableComparable {
+class DoubleString implements WritableComparable {
     String joinKey = new String();
     String tableName = new String();
 
@@ -74,7 +79,7 @@ public class IMDBStudent20190992
           Movie movie_head = (Movie) q.peek();
           if ( q.size() < topK || movie_head.rating < rating )
           {
-              Movie movie = new Movie(category, rating);
+              Movie movie = new Movie(title, rating);
               q.add( movie );
               if( q.size() > topK ) q.remove();
           }
@@ -123,10 +128,10 @@ public class IMDBStudent20190992
                 String title = itr.nextToken().trim();
                 String genre = itr.nextToken().trim();
 
-                boolean isFanstasy = false;
+                boolean isFantasy = false;
                 StringTokenizer itr2 = new StringTokenizer(genre, "|");
                 while(itr.hasMoreTokens()){
-                    if (itr.nextToken().equlas("Fantasy")){
+                    if (itr.nextToken().equals("Fantasy")){
                       isFantasy = true;
                       break;
                     }
