@@ -14,59 +14,58 @@ import org.apache.hadoop.mapreduce.lib.output.*;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
-
-class Movie{
-        public String title;
-        public double rating;
-
-        public Movie(String _title, double _rating) {
-            this.title = _title;
-            this.rating = _rating;
-        }
-        public String getTitle() {
-          return title;
-        }
-
-        public double getRating() {
-          return rating;
-        }	
-        public String getString() {
-            return title + " " + rating;
-        }
-
-    }
-class DoubleString implements WritableComparable {
-    String joinKey = new String();
-    String tableName = new String();
-
-    public DoubleString() {}
-    public DoubleString( String _joinKey, String _tableName ) {
-      joinKey = _joinKey;
-      tableName = _tableName;
-    }
-    public void readFields(DataInput in) throws IOException {
-      joinKey = in.readUTF();
-      tableName = in.readUTF();
-    }
-    public void write(DataOutput out) throws IOException {
-      out.writeUTF(joinKey);
-      out.writeUTF(tableName);
-    }
-  
-    public int compareTo(Object o1) {
-        DoubleString o = (DoubleString) o1;
-        int ret = joinKey.compareTo( o.joinKey );
-        if (ret!=0) return ret;
-        return tableName.compareTo( o.tableName );
-    }
-    public String toString() { 
-      return joinKey + " " + tableName; 
-    }
-
-}
 	
 public class IMDBStudent20190992
 {
+	public static class Movie{
+		public String title;
+		public double rating;
+
+		public Movie(String _title, double _rating) {
+		    this.title = _title;
+		    this.rating = _rating;
+		}
+		public String getTitle() {
+		  return title;
+		}
+
+		public double getRating() {
+		  return rating;
+		}	
+		public String getString() {
+		    return title + " " + rating;
+		}
+
+	    }
+	public static class DoubleString implements WritableComparable {
+	    String joinKey = new String();
+	    String tableName = new String();
+
+	    public DoubleString() {}
+	    public DoubleString( String _joinKey, String _tableName ) {
+	      joinKey = _joinKey;
+	      tableName = _tableName;
+	    }
+	    public void readFields(DataInput in) throws IOException {
+	      joinKey = in.readUTF();
+	      tableName = in.readUTF();
+	    }
+	    public void write(DataOutput out) throws IOException {
+	      out.writeUTF(joinKey);
+	      out.writeUTF(tableName);
+	    }
+	  
+	    public int compareTo(Object o1) {
+		DoubleString o = (DoubleString) o1;
+		int ret = joinKey.compareTo( o.joinKey );
+		if (ret!=0) return ret;
+		return tableName.compareTo( o.tableName );
+	    }
+	    public String toString() { 
+	      return joinKey + " " + tableName; 
+	    }
+
+	}
      public static class MovieComparator implements Comparator<Movie> {
             public int compare(Movie x, Movie y) {
                 if (x.rating > y.rating) return 1;
