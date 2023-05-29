@@ -117,18 +117,18 @@ public class IMDBStudent20190992
         }
      }
     public static class IMDBMapper extends Mapper<Object, Text, DoubleString, Text> {
-       	boolean movieFile = true;
+        boolean movieFile = true;
       	public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            DoubleString one_key = null;
-			      Text one_value = new Text();
+      	    String[] mv = value.toString().split("::");
+            DoubleString one_key = new DoubleString();
+	    Text one_value = new Text();
             if(movieFile){
-                StringTokenizer itr = new StringTokenizer(value.toString(), "::");
-                String movie_id = itr.nextToken().trim();
-                String title = itr.nextToken().trim();
-                String genre = itr.nextToken().trim();
+                String movie_id = mv[0];
+                String title = mv[1];
+                String genre = mv[2];
 
                 boolean isFantasy = false;
-                StringTokenizer itr2 = new StringTokenizer(genre, "|");
+                StringTokenizer itr = new StringTokenizer(genre, "|");
                 while(itr.hasMoreTokens()){
                     if (itr.nextToken().equals("Fantasy")){
                       isFantasy = true;
@@ -142,10 +142,8 @@ public class IMDBStudent20190992
                 }
              }
               else{
-                StringTokenizer itr = new StringTokenizer(value.toString(), "::");
-                itr.nextToken();
-                String movie_id = itr.nextToken().trim();
-                String rating = itr.nextToken().trim();
+                String movie_id = mv[1];
+                String rating = mv[2];
                 one_key = new DoubleString(movie_id, "R");
                 one_value.set("R," + rating);
                 context.write(one_key, one_value);
@@ -177,7 +175,7 @@ public class IMDBStudent20190992
              }
             
             if (sum != 0) {
-                double avg= sum / (i - 1);
+                double avg = sum / (i - 1);
                 insertMovie(queue, title, avg, topK);
               }
 
