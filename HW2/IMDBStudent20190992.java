@@ -158,13 +158,13 @@ public class IMDBStudent20190992 {
         private int topK;
 	    
         public void reduce(DoubleString key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-            double sum = 0;
-            int count = 0;
             String title = "";
+	    double sum = 0;
+            int cnt = 0;
 		
             for (Text val : values) {
                 String[] data = val.toString().split("::");
-                if (count == 0) {
+                if (cnt == 0) {
                     if (!data[0].equals("M")) {
                         break;
                     }
@@ -172,11 +172,11 @@ public class IMDBStudent20190992 {
                 } else {
                     sum += Double.parseDouble(data[1]);
                 }
-                count++;
+                cnt++;
             }
 
             if (sum != 0) {
-                double avg = sum / (count - 1);
+                double avg = sum / (cnt - 1);
                 insertMovie(queue, title, avg, topK);
             }
         }
