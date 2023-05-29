@@ -13,15 +13,15 @@ import org.apache.hadoop.util.GenericOptionsParser;
 public class IMDBStudent20190992 {
 
     public static class IMDB {
-        public String movie;
+        public String title;
         public double rating;
 
-        public IMDB(String movie, double rating) {
-            this.movie = movie;
+        public IMDB(String title, double rating) {
+            this.title = title;
             this.rating = rating;
         }
 
-        public String getMovie() { return this.movie; }
+        public String getTitle() { return this.title; }
         public Double getRating() { return this.rating; }
     }
 
@@ -104,10 +104,10 @@ public class IMDBStudent20190992 {
         }
     }
 
-    public static void insertIMDB(PriorityQueue q, String movie, double rating, int topK) {
+    public static void insertIMDB(PriorityQueue q, String title, double rating, int topK) {
         IMDB imdb_head = (IMDB) q.peek();
         if (q.size() < topK || imdb_head.rating < rating) {
-            IMDB imdb = new IMDB(movie, rating);
+            IMDB imdb = new IMDB(title, rating);
             q.add(imdb);
             if(q.size() > topK) q.remove();
         }
@@ -197,7 +197,7 @@ public class IMDBStudent20190992 {
         protected void cleanup(Context context) throws IOException, InterruptedException {
             while (queue.size() != 0) {
                 IMDB imdb = (IMDB) queue.remove();
-                context.write(new Text(imdb.getMovie()), new DoubleWritable(imdb.getRating()));
+                context.write(new Text(imdb.getTitle()), new DoubleWritable(imdb.getRating()));
             }
         }
     }
