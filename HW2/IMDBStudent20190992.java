@@ -135,8 +135,8 @@ public class IMDBStudent20190992 {
                 }
 
                 if (isFantasy) {
-                    outputKey = new DoubleString(id, "M");
-                    outputValue.set("M," + title);
+                    outputKey = new DoubleString(id, "Movies");
+                    outputValue.set("Movies::" + title);
                     context.write( outputKey, outputValue );
                 }
 
@@ -144,8 +144,8 @@ public class IMDBStudent20190992 {
                 String id = movie[1];
                 String rating = movie[2];
 
-                outputKey = new DoubleString(id, "R");
-                outputValue.set("R," + rating);
+                outputKey = new DoubleString(id, "Ratings");
+                outputValue.set("Ratings::" + rating);
                 context.write( outputKey, outputValue );
             }
         }
@@ -168,11 +168,11 @@ public class IMDBStudent20190992 {
             String title = "";
 		
             for (Text val : values) {
-                String[] data = val.toString().split(",");
+                String[] data = val.toString().split("::");
                 String file_type = data[0];
 
                 if (count == 0) {
-                    if (!file_type.equals("M")) {
+                    if (!file_type.equals("Movies")) {
                         break;
                     }
                     title = data[1];
