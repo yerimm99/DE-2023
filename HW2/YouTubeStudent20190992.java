@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.*;
+import java.io.InputStream;
 
 import org.apache.hadoop.conf.*;
 import org.apache.hadoop.fs.FileSystem;
@@ -9,8 +10,10 @@ import org.apache.hadoop.mapreduce.*;
 import org.apache.hadoop.mapreduce.lib.input.*;
 import org.apache.hadoop.mapreduce.lib.output.*;
 import org.apache.hadoop.util.GenericOptionsParser;
+import org.apache.hadoop.io.WritableComparable;
+import org.apache.hadoop.io.WritableComparator;
 
-public class Emp{
+class Emp{
         public String category;
         public double rating;
 
@@ -97,7 +100,7 @@ public class YouTubeStudent20190992
         String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
         
         if (otherArgs.length != 3) {
-            System.err.println("Usage: TopK <in> <out>");   
+            System.err.println("Usage: TopK <in> <out> <k>");   
             System.exit(2);
         }
         conf.setInt("topK", Integer.parseInt(otherArgs[2]));
