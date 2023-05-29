@@ -24,11 +24,11 @@ class Movie{
             this.rating = _rating;
         }
         public String getTitle() {
-          return this.title;
+          return title;
         }
 
         public double getRating() {
-          return this.rating;
+          return rating;
         }	
         public String getString() {
             return title + " " + rating;
@@ -94,7 +94,6 @@ public class IMDBStudent20190992
           DoubleString k2 = (DoubleString)w2;
           int result = k1.joinKey.compareTo(k2.joinKey);
           if(0 == result) {
-            // sorting
             result = k1.tableName.compareTo(k2.tableName);
           }
           return result;
@@ -118,8 +117,8 @@ public class IMDBStudent20190992
         }
      }
     public static class IMDBMapper extends Mapper<Object, Text, DoubleString, Text> {
-       boolean movieFile = true;
-		   public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+       	boolean movieFile = true;
+      	public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
             DoubleString one_key = null;
 			      Text one_value = new Text();
             if(movieFile){
@@ -144,6 +143,7 @@ public class IMDBStudent20190992
              }
               else{
                 StringTokenizer itr = new StringTokenizer(value.toString(), "::");
+                itr.nextToken();
                 String movie_id = itr.nextToken().trim();
                 String rating = itr.nextToken().trim();
                 one_key = new DoubleString(movie_id, "R");
@@ -163,7 +163,7 @@ public class IMDBStudent20190992
         private int topK;
         public void reduce(DoubleString key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
             String title = "";
-            int sum = 0;
+            double sum = 0;
             int i = 0;
             for (Text val : values) {
                 String [] data = val.toString().split(",");
@@ -171,13 +171,13 @@ public class IMDBStudent20190992
                     if(!data[0].equals("M")) break;
                         title = data[1];
                  } else {
-                     sum += Integer.valueOf(data[1]);
+                     sum += Double.parseDouble(data[1]);
                  }
                  i++;
              }
             
             if (sum != 0) {
-                double avg= ((double) sum) / (i - 1);
+                double avg= sum / (i - 1);
                 insertMovie(queue, title, avg, topK);
               }
 
@@ -204,7 +204,7 @@ public class IMDBStudent20190992
             System.err.println("Usage: TopK <in> <out> <k>");   
             System.exit(2);
         }
-        conf.setInt("topK", Integer.parseInt(otherArgs[2]));
+        conf.setInt("topK", Integer.valueOf(otherArgs[2]));
         
         Job job = new Job(conf, "IMDB");
         job.setJarByClass(IMDBStudent20190992.class);
