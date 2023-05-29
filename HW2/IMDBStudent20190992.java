@@ -172,7 +172,7 @@ public class IMDBStudent20190992 {
                 String file_type = data[0];
 
                 if (count == 0) {
-                    if (!file_type.equals("Movies")) {
+                    if (!file_type.equals("M")) {
                         break;
                     }
                     title = data[1];
