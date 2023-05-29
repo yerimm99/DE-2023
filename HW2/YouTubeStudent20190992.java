@@ -21,8 +21,11 @@ class Emp{
             this.category = _category;
             this.rating = _rating;
         }
-        public String getString() {
-            return category + " " + rating;
+        public String getCategory() {
+            return category;
+        }
+        public double getRating() {
+            return rating;
         }
 
     }
@@ -64,7 +67,7 @@ public class YouTubeStudent20190992
             context.write(one_key, one_value);
         }
     }
-    public static class YouTubeReducer extends Reducer<Text, DoubleWritable, Text, NullWritable> {
+    public static class YouTubeReducer extends Reducer<Text, DoubleWritable, Text, DoubleWritable> {
         private PriorityQueue<Emp> queue ;
         private Comparator<Emp> comp = new EmpComparator();
         private int topK;
@@ -90,7 +93,7 @@ public class YouTubeStudent20190992
         protected void cleanup(Context context) throws IOException, InterruptedException {
             while( queue.size() != 0 ) {
                 Emp emp = (Emp) queue.remove();
-                context.write( new Text( emp.getString() ), NullWritable.get() );
+                context.write( new Text( emp.getCategory() ), new DoubleWritable(emp.getRating()));
             }
         }
     }
@@ -112,7 +115,7 @@ public class YouTubeStudent20190992
         job.setNumReduceTasks(1);
         
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(NullWritable.class);
+        job.setOutputValueClass(DoubleWritable.class);
         
         FileInputFormat.addInputPath(job, new Path(otherArgs[0]));
         FileOutputFormat.setOutputPath(job, new Path(otherArgs[1]));
