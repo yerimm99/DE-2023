@@ -24,12 +24,18 @@ public final class IMDBStudent20190992 implements Serializable {
 		
 		FlatMapFunction<String, String> fmf = new FlatMapFunction<String, String>() {
 			public Iterator<String> call(String s) {
-				String num = s.toString().split("::")[0];
-			    	String title = s.toString().split("::")[1];
+				ArrayList<String> result = new ArrayList<String>();
 			    	String list = s.toString().split("::")[2];
 			    	
+			    	StringTokenizer itr = new StringTokenizer(list, "|");
+			    	String genre = "";
+			    	while(itr.hasMoreTokens()){
+					genre = itr.nextToken();
+					result.add(genre);
+				    }
 			    	
-				return Arrays.asList(list.split("|")).iterator();
+			    	
+				return result.iterator();
 			}
 		};
 		
