@@ -56,6 +56,7 @@ public final class IMDBStudent20190992 implements Serializable {
 			}
 		};
 		JavaPairRDD<String, Integer> counts = ones.reduceByKey(f2);
+		JavaRDD<String> result = counts.map(x -> x._1 + " " + x._2);
 		counts.saveAsTextFile(args[1]);
 		spark.stop();
 	}
